@@ -9,7 +9,10 @@
 
 (defn calibration
   [input]
-  (reduce + (map parse-long (map str->two-digits (map atoi (str/split-lines (slurp input)))))))
+  (reduce + 
+          (map parse-long 
+               (map str->two-digits 
+                    (map atoi (str/split-lines (slurp input)))))))
 
 ;ingest input
 ;read each line separetedly , vector of strings
