@@ -1,4 +1,4 @@
-(ns advent-of-code.calibration
+(ns advent-of-code.day1.calibration
   (:require [clojure.string :as str]))
 
 (defn atoi [string]
