@@ -6,7 +6,7 @@
 (defn input->data [input]
   (str/split-lines (slurp input)))
 
-(defn parse-subgames [turns]
+(defn parse-turns [turns]
   (str/split turns #"\s*;\s*"))
 
 (defn parse-take [turn string]
@@ -17,12 +17,15 @@
   (str/split turn #"\s*,\s*"))
 
 (defn parse-turn [string]
-  (->> (parse-comma string)
-       (reduce parse-take {})))
+  (->> (parse-turns string)
+       (map parse-comma)
+       (map #(reduce parse-take {} %))
+       (into [])
+       ))
 
-(defn data->games-map [game-info]
+ (defn data->games-map [game-info]
   (let [[_ k v] (re-matches #"Game (\d+): (.*)" game-info)]
-    {:game (parse-long k) :turns (map parse-comma (parse-subgames v))}))
+    {:game (parse-long k) :turns (parse-turn v)}))
 
 (defn calculate-cubes [input]
   (->> (input->data input)
@@ -39,9 +42,14 @@
                         "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red"
                         "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"])
   
-  (parse-turn ["6 red" "1 blue" "3 green"])
+    
+  (reduce parse-take {} ["1 blue" "2 green"])
+  ;same as (parse-take (parse-take {} "1 blue") "2 green")
+  ;=> {:blue 1, :green 2}
+  (parse-turn "1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue")
+  ;(["1 blue" "2 green"] ["3 green" "4 blue" "1 red"] ["1 green" "1 blue"])
+
   (map data->games-map (input->data "day2_exinput.txt"))
-  (parse-subgames "1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue")
   )
 
 ;builds on top of parse turn 
@@ -50,7 +58,7 @@
 [{:red 3 :blue 2} {:green 1 :red 2}])
 ;outputs a map for each turn
 ;"Game 1: 2 blue, 1 red; 1 green, 2 blue"
-{:game-id 1 :turns [{:blue 2 :red 1}{:green 1 :blue 2}]}
+
 
 #_(game -> split on ; => turn strings
         turn string -'> split on , => take strings
