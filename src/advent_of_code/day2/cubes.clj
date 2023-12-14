@@ -7,15 +7,16 @@
 (defn input->data [input]
   (str/split-lines (slurp input)))
 
-#_(defn get-game-id [game-info]
+(defn get-game-id [game-info]
     (last (str/split (first (str/split game-info #":")) #" ")))
 
-(defn games-results [game-info]
-  (into []
-        (map
-         #(str/split % #":|,")
-         (str/split game-info #";"))))
+(defn get-game-info [game-info]
+  (str/split game-info #";"))
 
+(defn games-results [game-info]
+  (map
+   #(str/split % #",")
+   (str/split game-info #";")))
 
 (defn eligible-games [game-results]
   (map second (map first game-results)))
@@ -23,7 +24,7 @@
 (defn game-id [eligible-game-results]
   (map first (map first eligible-game-results)))
 
-#_(defn results->map [game-results]
+(defn results->map-1 [game-results]
   (map (apply hash-map (flatten (map  #(re-seq #"[a-z]+|[0-9]+" %) game-results)))))
 
 (defn split-on-space [s]
@@ -38,17 +39,26 @@
        (map games-results)
        results->map))
 
+;"Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"
+#_ {"game 1" {{ "blue" 3 "red" 4}
+    {"red" 1 "green" 2 "blue" 6 }
+    {"green" 2}}
+    }
+
+#_{"game " 1 "terms" [{"blue" 3 "red" 4}
+   {"red" 1 "green" 2 "blue" 6}
+   {"green" 2}]}
 
 (comment
   (possible-sum "day2_exinput.txt")
   (possible-sum "day2_input.txt")
   (input->data "day2_input.txt")
   (input->data "day2_exinput.txt")
-  (eligible-games (map games-results (input->data "day2_exinput.txt")))
-  (map first (map first (map games-results (input->data "day2_exinput.txt"))))
+  (map get-game-id (input->data "day2_exinput.txt"))
+  (map get-game-info (input->data "day2_exinput.txt"))
   (map games-results (input->data "day2_exinput.txt"))
-  (results->map ["Game 1" " 3 blue" " 4 red"])
-  ;=> (["Game" "1"] ["3" "blue"] ["4" "red"])
+  (results->map-1 ["Game 1: 3 blue, 4 red" " 1 red, 2 green, 6 blue" " 2 green"])
+  
   )
 
 
