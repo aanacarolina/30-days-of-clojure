@@ -15,7 +15,7 @@
   (str/split-lines (slurp input)))
 
 (defn split-turns
-  "receveis a  "
+  "receveis a string of turns and splits by semicolon "
   [turns]
   (str/split turns #"\s*;\s*"))
 
@@ -48,9 +48,26 @@
 
 (def max-cubes {:red 12 :green 13 :blue 14})
 
-;
+#_(defn turns-vals
+  [game]
+  (   (map #(> 14 %) (flatten (map vals (game :turns))))))
 
+(defn valid-turn? [turn]
+  (let [{:keys [red green blue]
+         :or {red 0 green 0 blue 0}} turn]
+    (and 
+     (>= 12 red)
+     (>= 13 green)
+     (>= 14 blue)
+     ))) 
 
+(defn valid-game? [game]
+  (every? valid-turn? (:turns game)))
+
+;1- cond 
+;1.1 if anything bigger 14 dissoc  
+;1.2 then any w greens > 13
+;1.2 then any w reds > 12
 
 ;----------puzzle output---------------
 
@@ -58,10 +75,20 @@
   "Calculates the sum of game IDs that would have been possible, given the maximum amount of cubes."
   [input]
   (->> (input->data input)
-       (map data->games-map)))
+       (map data->games-map)
+       (filter valid-game?)
+       (map :game-id)
+       (reduce +)))
 
 (comment
   (possible-games-sum "day2_exinput.txt")
+  (possible-games-sum "day2_input.txt")
+
+  (valid-game? {:game-id 1, :turns [{:blue 3, :red 4} {:red 1, :green 2, :blue 6} {:green 2}]})
+
+  (check-maxes {:game-id 1, :turns [{:blue 3, :red 4} {:red 1, :green 2, :blue 6} {:green 2}]})
+
+  (map #(> 14 %) '(3 4))
 
   (input->data "day2_exinput.txt")
   (map data->games-map ["Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"
@@ -77,7 +104,8 @@
   (parse-turns "1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue")
   ;(["1 blue" "2 green"] ["3 green" "4 blue" "1 red"] ["1 green" "1 blue"])
 
-  (map data->games-map (input->data "day2_exinput.txt")))
+  (map data->games-map (input->data "day2_exinput.txt"))
+  )
 
 ;builds on top of parse turn 
 #_("3 red , 2 blue; 1 green, 2 red"
@@ -88,5 +116,13 @@
 #_(game -> split on ; => turn strings
         turn string -'> split on , => take strings
         take string -> parse count and color, update map)
+
+#_(let [{:keys [x y]
+         :or {x 0 y 0}} {:x 50}]
+    (prn :x x :y y))
+;:x 50 :y 0
+;=> nil
+
+;(get game :turns) (verbose) == (game :turns)(nil issue) == (:turns game) (most idiomatic)
 
  
