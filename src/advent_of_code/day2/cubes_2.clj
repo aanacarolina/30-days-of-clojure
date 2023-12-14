@@ -1,10 +1,10 @@
 (ns advent-of-code.day2.cubes_2
   (:require [clojure.string :as str]))
 
-
-;--------------- treating input ----------------
+;--------------- input parser ----------------
 #_(glossary
-   game - key value pair - being => k :game v game id -> :game 3
+   game - map of key value pair - being => k :game-id v :turns -> {:game-id 1, :turns [{:blue 3, :red 4} {:red 1, :green 2, :blue 6} {:green 2}]}
+   game-id - key value pair - being => k :game v game id -> :game 3
    turns - vector of maps containing a turn -> [{:colour int} {:colour int}]
    turn - map of takes -> {:green 5, :red 1}
    take - key value pair - being => k :colour v qty -> :green 3)
@@ -20,7 +20,7 @@
   (str/split turns #"\s*;\s*"))
 
 (defn parse-take
-  "the args are: turn is an empty map {} that we will be populating with each string pair (" 1 blue ")"
+  "the args are: turn is an empty map {} that we will be populating with each string pair (\" 1 blue \")"
   [turn string]
   (let [[_ v k] (re-matches #"(\d+) (red|green|blue)" string)]
     (assoc turn (keyword k) (parse-long v))))
@@ -31,30 +31,37 @@
   (str/split turn #"\s*,\s*"))
 
 (defn parse-turns
-  "parses each turn and creates to the desired data structure (vector of maps containing each structured turn) "
+  "parses each turn and creates to the desired :turns structure (vector of maps containing each structured turn) "
   [string]
   (->> (split-turns string)
        (map parse-comma)
        (map #(reduce parse-take {} %))
        (into [])))
 
-(defn data->games-map 
-  ""
+(defn data->games-map
+  "turns a full game info string into a map containing :game and :turns formatted"
   [game-info]
   (let [[_ k v] (re-matches #"Game (\d+): (.*)" game-info)]
-    {:game (parse-long k) :turns (parse-turns v)}))
+    {:game-id (parse-long k) :turns (parse-turns v)}))
 
-;----------  ---------------
+;----------puzzle logic---------------
 
 (def max-cubes {:red 12 :green 13 :blue 14})
 
+;
 
-(defn calculate-cubes [input]
+
+
+;----------puzzle output---------------
+
+(defn possible-games-sum
+  "Calculates the sum of game IDs that would have been possible, given the maximum amount of cubes."
+  [input]
   (->> (input->data input)
        (map data->games-map)))
 
 (comment
-  (calculate-cubes "day2_exinput.txt")
+  (possible-games-sum "day2_exinput.txt")
 
   (input->data "day2_exinput.txt")
   (map data->games-map ["Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"
