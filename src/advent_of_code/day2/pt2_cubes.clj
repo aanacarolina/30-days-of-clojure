@@ -42,7 +42,7 @@
 
 (defn turns-power
   [game]
-  (let [blue (apply max (do (remove nil? (map :blue (:turns game)))))
+  (let [blue (apply max (remove nil? (map :blue (:turns game))))
         red (apply max (remove nil? (map :red (:turns game))))
         green (apply max (remove nil? (map :green (:turns game))))]
     (* blue red green)))
