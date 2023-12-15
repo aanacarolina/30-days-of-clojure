@@ -40,35 +40,26 @@
 
 ;----------puzzle logic---------------
 
-(def max-cubes {:red 12 :green 13 :blue 14})
-
-#_(defn turns-vals
+(defn turns-power
   [game]
-  (   (map #(> 14 %) (flatten (map vals (game :turns))))))
-
-(defn valid-turn? [turn]
-  (let [{:keys [red green blue]
-         :or {red 0 green 0 blue 0}} turn]
-    (and 
-     (>= 12 red)
-     (>= 13 green)
-     (>= 14 blue)
-     ))) 
-
-(defn valid-game? [game]
-  (every? valid-turn? (:turns game)))
+  (let [blue (apply max (do (remove nil? (map :blue (:turns game)))))
+        red (apply max (remove nil? (map :red (:turns game))))
+        green (apply max (remove nil? (map :green (:turns game))))]
+    (* blue red green)))
 
 ;----------puzzle output---------------
 
-(defn possible-games-sum
+(defn games-power-sum
   "Calculates the sum of game IDs that would have been possible, given the maximum amount of cubes."
   [input]
   (->> (input->data input)
        (map data->games-map)
-       (filter valid-game?)
-       (map :game-id)
-       (reduce +)))
+       (map turns-power)
+       (reduce +)
+       ))
 
 (comment
-  (possible-games-sum "day2_exinput.txt")
-)
+  (games-power-sum "day2_input.txt")
+  (turns-power  {:game-id 1, :turns [{:blue 3, :red 4} {:red 1, :green 2, :blue 6} {:green 2}]})
+  
+  )
