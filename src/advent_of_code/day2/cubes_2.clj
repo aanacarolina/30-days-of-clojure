@@ -64,10 +64,6 @@
 (defn valid-game? [game]
   (every? valid-turn? (:turns game)))
 
-;1- cond 
-;1.1 if anything bigger 14 dissoc  
-;1.2 then any w greens > 13
-;1.2 then any w reds > 12
 
 ;----------puzzle output---------------
 
