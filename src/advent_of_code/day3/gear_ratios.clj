@@ -9,7 +9,8 @@
 
 
 ;criar matriz/map
-'([{:x 0, :y 0, :value 467 :type :number}
+
+#_'([{:x 0, :y 0, :value 467 :type :number}
    {:x 3, :y 0, :value 114 :type :number}]
   [{:x 3, :y 1, :value "*" :type :symbol}]
   [{:x 0, :y 2, :value 35 :type :number}
@@ -34,20 +35,76 @@
 
 ;sum total
 
+
 (defn input->data [file]
   (str/split-lines (slurp file)))
 
-(defn parse-data [data]
-  (let [[all digit others] (re-find #"(\d+) (.*)" data)]
-    [all digit others]))
+;(+ x (count (re-find #"\d+" s)))
+;(parse-long (str s (take-while #(Character/isDigit %) s))) 
 
-;;(loop )
+(defn parse-data [s]
+  (loop [result []
+         x 0]
+    (cond 
+      ;checks if eol
+      (>= x (count s)) 
+      result
+      ;checks if dot
+      (= (subs s x (inc x)) ".")
+      (recur 
+       result
+       (inc x))
+      ;checks if digit
+      (-> s
+          (.charAt x)
+          Character/isDigit) 
+      (let [v (apply str (take-while #(Character/isDigit %) s))]
+       (recur
+         (conj result 
+               {:x x 
+                :y 0 
+                :value (parse-long v)
+                :type :digit})
+         (inc x)
+         ))
+      ;checks if symbol (actually anything other than eol, digit or dot))
+      :else 
+      (recur
+       (conj result {:x x :y 0 :value (subs s x (inc x)) :type :symbol})
+       (inc x))
+      
+      )))
+
+(comment
+  (parse-data "467.+..114...")
+  (parse-data ".+...911.*")
+  
+  (loop (subs "467.+..114..." 0 (inc 0)))
+  
+     (-> "467.+..114..."
+      (.charAt 5)
+      Character/isDigit) 
+  (number? (parse-long (subs "467.+..114..." 3 (inc 3))))
+  )
+
+#_(-> s 
+    (.charAt x) 
+    Character/isDigit)
+
+;eos >= count s return result 
+;inc x 
+;if not . digit
+
+(defn data->location-map [parsed-data]
+  parse-data
+  )
 
 (defn is-adjacent? [data])
 
 (comment
   (input->data "day3_exinput.txt")
-  
+
+
   (map parse-data ["467..114.."
  "...*......"
  "..35..633."
@@ -59,3 +116,14 @@
  "...$.*...."
  ".664.598.."])
   )
+
+
+#_(def game-state
+  (let [game '[[_ _ _ _]
+               [1 1 _ _]
+               [! 1 _ _]
+               [1 1 _ _]]]
+    (for [[i row] (map-indexed list game)
+          [j cell] (map-indexed list row)
+          :when (not= '_ cell)]
+      {:x i :y j :value cell})))
