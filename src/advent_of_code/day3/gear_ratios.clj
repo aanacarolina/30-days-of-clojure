@@ -42,7 +42,9 @@
 ;(+ x (count (re-find #"\d+" s)))
 ;(parse-long (str s (take-while #(Character/isDigit %) s))) 
 
-(defn parse-data [s]
+
+
+(defn parse-data [y s]
   (loop [result []
          x 0]
     (cond 
@@ -56,29 +58,35 @@
        (inc x))
       ;checks if digit
       (-> s
-          (.charAt x)
+          (.charAt x ); add the number of 
           Character/isDigit) 
-      (let [size (inc (count (apply str (take-while #(Character/isDigit %) s))))]
+      (let [v (apply str (take-while #(Character/isDigit %) (subs s x)))
+            ]
        (recur
          (conj result 
                {:x x 
-                :y 0 
-                :value (subs s x (+ x v))
+                :y y 
+                :value v
                 :type :digit})
-         (inc x)
+         (+ x (count v))
          ))
       ;checks if symbol (actually anything other than eol, digit or dot))
       :else 
       (recur
-       (conj result {:x x :y 0 :value (subs s x (inc x)) :type :symbol})
+       (conj result {:x x :y y :value (subs s x (inc x)) :type :symbol})
        (inc x)) 
       )))
 
+(defn process-gears [input]
+  (->> (input->data input)
+       (map-indexed parse-data)
+       (reduce concat )
+       ))
+
 (comment
-  (parse-data "467.+..114...")
-  (parse-data ".+...911.*")
   
-  (loop (subs "467.+..114..." 0 (inc 0)))
+  (process-gears "day3_exinput.txt")
+  
   
      (-> "467.+..114..."
       (.charAt 5)
@@ -103,6 +111,10 @@
 (comment
   (input->data "day3_exinput.txt")
 
+  (condp  (= (re-matches #"\d+") s)
+    (re-matches #"\d+") :>> (count (re-matches #"\d+"))
+    #{4 5 9} :>> dec
+    #{1 2 3} :>> #(+ % 3))
 
   (map parse-data 
        ["467..114.."
