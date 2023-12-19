@@ -58,12 +58,12 @@
       (-> s
           (.charAt x)
           Character/isDigit) 
-      (let [v (apply str (take-while #(Character/isDigit %) s))]
+      (let [size (inc (count (apply str (take-while #(Character/isDigit %) s))))]
        (recur
          (conj result 
                {:x x 
                 :y 0 
-                :value (parse-long v)
+                :value (subs s x (+ x v))
                 :type :digit})
          (inc x)
          ))
@@ -71,8 +71,7 @@
       :else 
       (recur
        (conj result {:x x :y 0 :value (subs s x (inc x)) :type :symbol})
-       (inc x))
-      
+       (inc x)) 
       )))
 
 (comment
@@ -84,7 +83,7 @@
      (-> "467.+..114..."
       (.charAt 5)
       Character/isDigit) 
-  (number? (parse-long (subs "467.+..114..." 3 (inc 3))))
+  (number? (parse-long (subs "467.+..114..." 1 (inc 1))))
   )
 
 #_(-> s 
@@ -105,7 +104,8 @@
   (input->data "day3_exinput.txt")
 
 
-  (map parse-data ["467..114.."
+  (map parse-data 
+       ["467..114.."
  "...*......"
  "..35..633."
  "......#..."
