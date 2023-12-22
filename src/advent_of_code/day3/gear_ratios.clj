@@ -89,26 +89,44 @@
        (inc x)))))
 
 (defn parts-list [data-list]
+  
   (filter #(= (:type %) :part) data-list))
 
 (defn symbols-list [data-list]
   (filter #(= (:type %) :symbol) data-list))
 
-(defn digit [digit-map]
-  (:value digit-map))
+(defn adjacent-locations [x y width]
+  (for [ adj-x (range (dec x) (+ x width 1))  
+        adj-y (range (dec y) (+ y 2))];height is one and extra 1 not inclusive
+    [adj-x adj-y])) 
 
-(defn digit-width [digit]
-  (count digit))
+;is there are better fast way
+;giant non datomic database colunm birthdate - index date of birth and then check on this
+;what that would look like for us here
 
-(defn is-valid-part? [symbols part]
-  true)
+;find a symbol at adjacent locations
+
+(defn is-valid-part? [symbols-locations part]
+  (let [{:keys [x y width]} part
+        part-adj-locations (adjacent-locations x y width)]
+     ;(some (fn [l](contains? symbols-locations l)) part-adj-locations)
+    (some symbols-locations part-adj-locations)
+    ))
+
+;part x and y 
+;neighboring x and y of symbols around the part width
+;either sum or sub  [[x y][x y][x y][x y]]
+;if in the map of symbols matches the x
+
+(defn symbol-location [symbol]
+  [(:x symbol) (:y symbol)])
 
 (defn process-gears [input]
   (let [nodes (->> (input->data input)
                    (map-indexed parse-data)
                    (reduce concat))
         parts (parts-list nodes)
-        symbols (symbols-list nodes)]
+        symbols (set (map symbol-location (symbols-list nodes)))]
     (->> parts
          (filter #(is-valid-part? symbols %))
          (map :value)
@@ -119,17 +137,16 @@
 
   (process-gears "day3_exinput.txt")
   (process-gears "day3_input.txt")
-
+  (adjacent-locations 7 5 3)
   (parts-list data-map)
   (symbols-list data-map)
-
-  (digit-width (digit {:x 1, :y 9, :value "664", :type :digit}))
 
   (-> "467.+..114..."
       (.charAt 5)
       Character/isDigit)
    ;Same thing
-  (number? (parse-long (subs "467.+..114..." 5 (inc 5)))))
+  (number? (parse-long (subs "467.+..114..." 5 (inc 5))))
+  )
 
 
 

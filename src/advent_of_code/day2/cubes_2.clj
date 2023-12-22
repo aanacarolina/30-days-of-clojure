@@ -82,7 +82,7 @@
 
   (valid-game? {:game-id 1, :turns [{:blue 3, :red 4} {:red 1, :green 2, :blue 6} {:green 2}]})
 
-  (check-maxes {:game-id 1, :turns [{:blue 3, :red 4} {:red 1, :green 2, :blue 6} {:green 2}]})
+;  (check-maxes {:game-id 1, :turns [{:blue 3, :red 4} {:red 1, :green 2, :blue 6} {:green 2}]})
 
   (map #(> 14 %) '(3 4))
 
