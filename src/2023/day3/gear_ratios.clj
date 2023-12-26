@@ -71,7 +71,7 @@
        (inc x))
       ;checks if digit
       (-> s
-          (.charAt x); add the number of 
+          (.charAt x)
           Character/isDigit)
       (let [v (apply str (take-while #(Character/isDigit %) (subs s x)))]
         (recur
@@ -137,7 +137,7 @@
 
   (process-gears "day3_exinput.txt")
   (process-gears "day3_input.txt")
-  (adjacent-locations 7 5 3)
+  (adjacent-locations 7 5 2)
   (parts-list data-map)
   (symbols-list data-map)
 
