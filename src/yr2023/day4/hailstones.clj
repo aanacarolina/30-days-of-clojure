@@ -8,8 +8,10 @@
  (str/split data #"\s*@\s*"))
 
 (defn p-v->long [line]
-  (into [] (map parse-long (str/split line #"\s*,\s*"))))
+  (drop-last (into [] (map parse-long (str/split line #"\s*,\s*")))))
 
+(defn sum-x-z [p v]
+  (set (map + p v)))
 
 (comment 
   
@@ -17,6 +19,7 @@
   (map split-position-velocity data)
   (map p-v->long  ["19, 13, 30" "-2,  1, -2"])
   (map + [19 13 30] [-2 1 -2])
+  (sum-x-z '(19 13) '(-2 1))
 
   (map + [1 2 3] [1 2 3])
   )
