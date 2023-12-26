@@ -1,4 +1,4 @@
-(ns advent-of-code.day1.calibration-p2
+(ns yr2023.day1.calibration-p2
   (:require [clojure.string :as str]))
 
 (def nbr {"one" "1" 

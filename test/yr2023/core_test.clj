@@ -1,4 +1,4 @@
-(ns days-of-clojure.core-test
+(ns yr2023.core-test
   (:require [clojure.test :refer :all]
             [days-of-clojure.core :refer :all]))
 

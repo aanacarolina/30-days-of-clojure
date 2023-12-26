@@ -1,4 +1,4 @@
-(ns advent-of-code.day3.gear-ratios
+(ns yr2023.day3.gear-ratios
   (:require [clojure.string :as str]))
 
 ;parse 

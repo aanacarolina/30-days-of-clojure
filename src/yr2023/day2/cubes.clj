@@ -1,4 +1,4 @@
-(ns advent-of-code.day2.cubes
+(ns yr2023.day2.cubes
   (:require [clojure.string :as str]
             [clojure.edn :as edn]))
 

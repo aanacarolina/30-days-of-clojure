@@ -1,4 +1,4 @@
-(ns advent-of-code.day1.calibration-p3
+(ns yr2023.day1.calibration-p3
   (:require [clojure.string :as str]))
 
 

@@ -1,4 +1,4 @@
-(ns advent-of-code.day3.p2-gear-ratios
+(ns yr2023.day3.p2-gear-ratios
   (:require [clojure.string :as str]))
 
 ;parse 
@@ -25,21 +25,6 @@
                 {:x 5, :y 9, :value "598", :type :digit}))
 
 
-
-#_'([{:x 0, :y 0, :value 467 :type :number}
-     {:x 3, :y 0, :value 114 :type :number}]
-    [{:x 3, :y 1, :value "*" :type :symbol}]
-    [{:x 0, :y 2, :value 35 :type :number}
-     {:x 3, :y 2, :value 633 :type :number}]
-    [{:x 2, :y 3, :value "#" :type :symbol}]
-    [{:x 0, :y 4, :value 617 :type :number}
-     {:x 1, :y 4, :value "*" :type :symbol}]
-    [{:x 6, :y 5, :value "+" :type :symbol}
-     {:x 7, :y 5, :value 58 :type :number}]
-    [{:x 2, :y 6, :value 592 :type :number}]
-    [{:x 6, :y 7, :value 755 :type :number}]
-    [{:x 3, :y 8, :value 664 :type :number}
-     {:x 4, :y 8, :value 598 :type :number}])
 
 ;story 
 ;x = line 
@@ -130,17 +115,5 @@ se não, vai pra proxima part do mapa)
 
   (process-gears "day3_exinput.txt")
   (process-gears "day3_input.txt")
- (def nodes (->> (input->data "day3_exinput.txt")
-             (map-indexed parse-data)
-             (reduce concat))
-  (map adjacent-locations )
-
-  
-  )
-
-
-
-
-
-
+)
 

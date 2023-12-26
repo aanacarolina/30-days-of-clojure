@@ -1,4 +1,4 @@
-(ns advent-of-code.day2.pt2_cubes
+(ns yr2023.day2.pt2-cubes
   (:require [clojure.string :as str]))
 
 ;--------------- input parser ----------------
