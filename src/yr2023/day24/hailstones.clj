@@ -1,4 +1,4 @@
-(ns yr2023.day4.hailstones
+(ns yr2023.day24.hailstones
   (:require [clojure.string :as str]))
 
 (defn input->data [input]
@@ -15,11 +15,10 @@
 
 (comment 
   
-  (def data (input->data "day24_input.txt"))
+  (def data (input->data "inputs/day24_input.txt"))
   (map split-position-velocity data)
   (map p-v->long  ["19, 13, 30" "-2,  1, -2"])
   (map + [19 13 30] [-2 1 -2])
   (sum-x-z '(19 13) '(-2 1))
-
   (map + [1 2 3] [1 2 3])
   )
