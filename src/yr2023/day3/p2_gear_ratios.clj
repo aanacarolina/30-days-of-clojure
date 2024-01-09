@@ -113,7 +113,7 @@ se não, vai pra proxima part do mapa)
 
 (comment
 
-  (process-gears "day3_exinput.txt")
-  (process-gears "day3_input.txt")
+  (process-gears "inputs/day3_exinput.txt")
+  (process-gears "inputs/day3_input.txt")
 )
 

@@ -21,6 +21,7 @@
     (long (math/pow 2 (dec (count numbers-set))))
     0))
 
+
 (defn scratchcards-points [input]
   (->> input
        input->data
@@ -33,7 +34,7 @@
 (comment
 
   (def input "inputs/day4_input.txt")
-  (scratchcards-points input)
+  (time (scratchcards-points input))
   (map score '(#{86 48 17 83} #{32 61} #{1 21} #{84} #{} #{}))
 
   )
