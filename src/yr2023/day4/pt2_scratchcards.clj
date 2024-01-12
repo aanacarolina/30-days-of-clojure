@@ -35,16 +35,6 @@
        card)) 
    rest-cards))
 
-(comment 
-  
-  (calculate-copies [{:copies 1} ] 2 1)
-  )
-
-
-
-;blockers
-;was thinking of map, not the array :keys
-;was not able to separate rounds and the queue
 
 (defn score [cards] 
   (loop [score 0 
