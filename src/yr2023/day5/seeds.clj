@@ -5,8 +5,9 @@
 (defn input->data [input]
   (str/split-lines (slurp input)))
 
-(defn parse-data [data]
+(defn parse-data 
   "convert string to data structure"
+  [data]
   (let [seeds (first (map #(re-seq  #"\d+" %) data))
         int-maps (->> (rest data)
                       (map #(re-seq #"\d+" %))
@@ -26,18 +27,20 @@
 ;save location
 ;return seq w/ all locations
 
-(defn convert-maps [seed maps]
-  "converts numbers from a source category into numbers in a destination category"
-  (loop [map (first maps)]
-    (if (seq? map)
-      (let [dst (get map 0)
-            src (get map 1)
-            rng (get map 2)]
-        (if
-         (= true (some #(= seed %) (or (range  dst (+ dst rng)) (range src (+ src rng)))))
-          (+ seed (dst - src))
-          seed))
-      (recur (rest maps)))))
+(defn convert-seed [seed maps]
+  (loop [remaining-maps maps
+         a-seed (atom seed)]
+    (if (empty? remaining-maps)
+      @a-seed
+      (do
+        (let [current-vector (first remaining-maps) 
+            dst (get current-vector 0)
+            src (get current-vector 1)
+            rng (get current-vector 2)] 
+        (when (some #(= @a-seed %) (or (range  dst (+ dst rng)) (range src (+ src rng))))
+          (reset! a-seed (+ @a-seed (- dst src)) )))
+      (recur (rest remaining-maps)
+              @a-seed)))))
 
 
 (defn smallest-location [input]
@@ -48,7 +51,7 @@
 
 (comment
   (smallest-location "inputs/day5_exinput.txt")
-  (convert-maps 79 '([50 98 2]
+  (convert-seed 79 '([50 98 2]
                      [52 50 48]
                      [0 15 37]
                      [37 52 2]
@@ -66,6 +69,8 @@
                      [1 0 69]
                      [60 56 37]
                      [56 93 4]))
+
+
   )
 
 
