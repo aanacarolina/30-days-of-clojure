@@ -5,7 +5,31 @@
 (defn input->data [input]
   (str/split-lines (slurp input)))
 
-(defn parse-data 
+(defn all-seeds [data]
+  (map parse-long (first (map #(re-seq  #"\d+" %) data))))
+
+(defn map-content [data]
+  (take-while (complement empty?) (nthrest (rest data) 2)))
+
+(defn map-content->integer [content]
+  (mapv (fn [inner-vector]
+          (mapv #(parse-long %) inner-vector))
+        content))
+
+(defn map-name [data]
+  (second (rest data)))
+
+(defn map-category [data]
+  (let [map-content  (into [] (map #(re-seq #"\d+" %) (map-content data)))]
+  (map-content->integer map-content))) 
+
+
+(defn parsed-data [data]
+  {:seeds (all-seeds data)
+   :all-maps {:map-name (map-name data) :map-content (map-category data)}})
+
+
+#_(defn parse-data 
   "convert string to data structure"
   [data]
   (let [seeds (first (map #(re-seq  #"\d+" %) data))
@@ -29,18 +53,26 @@
 
 (defn convert-seed [seed maps]
   (loop [remaining-maps maps
-         a-seed (atom seed)]
+         value seed]
     (if (empty? remaining-maps)
-      @a-seed
+      value
       (do
         (let [current-vector (first remaining-maps) 
             dst (get current-vector 0)
             src (get current-vector 1)
             rng (get current-vector 2)] 
-        (when (some #(= @a-seed %) (or (range  dst (+ dst rng)) (range src (+ src rng))))
-          (reset! a-seed (+ @a-seed (- dst src)) )))
+        (if (some #(= value %) (or (range  dst (+ dst rng)) (range src (+ src rng))))
+          (reset! value (+ value (- dst src)) )))
       (recur (rest remaining-maps)
-              @a-seed)))))
+              value)))))
+
+#_(defn is-in-range? [input-value range] 
+ (let [[dest-start src-start range-length] range]
+   (println "dest" dest-start "src" src-start "lenght" range-length
+            )
+   (<= src-start input-value dest-start)))
+
+;(<= start-value input-value end-value)
 
 
 (defn smallest-location [input]
@@ -51,30 +83,14 @@
 
 (comment
   (smallest-location "inputs/day5_exinput.txt")
-  (convert-seed 79 '([50 98 2]
-                     [52 50 48]
-                     [0 15 37]
-                     [37 52 2]
-                     [39 0 15]
-                     [49 53 8]
-                     [0 11 42]
-                     [42 0 7]
-                     [57 7 4]
-                     [88 18 7]
-                     [18 25 70]
-                     [45 77 23]
-                     [81 45 19]
-                     [68 64 13]
-                     [0 69 1]
-                     [1 0 69]
-                     [60 56 37]
-                     [56 93 4]))
-
-
+  (def data (input->data "inputs/day5_exinput.txt"))
+  (all-seeds data) 
+  (map-category data)
+  (parsed-data data) 
   )
 
-
-#_(desired parsed data format
+(
+#_(initial desired parsed data format
            {:seeds [79 14 55 13]
             :categories-conversion-maps
             {:seed-to-soil [[50 98 2] [52 50 48]]
@@ -100,4 +116,4 @@
              [0 69 1]
              [1 0 69]
              [60 56 37]
-             [56 93 4])})
+             [56 93 4])}))
